@@ -1,0 +1,160 @@
+---
+title: Mixed Effect
+output: html_document
+---
+
+```{R setup, include = FALSE}
+knitr::opts_chunk$set(comment = NA, prompt = TRUE)
+```
+
+# Linear Mixed-Effects Models
+
+### A Simple Example of Random Effects
+
+```{r}
+library(nlme)
+data("Rail")
+plot( Rail )
+Rail
+```
+singl-mean model
+$$y_{ij} = \beta + \epsilon_{ij},\quad i=1,\dots,M,\quad j=1,\dots,n_i.$$
+```{r}
+fm1Rail.lm <- lm( travel ~ 1, data = Rail )
+fm1Rail.lm
+boxplot(fm1Rail.lm$residuals ~ Rail$Rail)
+```
+fixed-effects model
+$$y_{ij} = \beta_i + \epsilon_{ij},\quad i=1,\dots,M,\quad j=1,\dots,n_i.$$
+```{r}
+fm2Rail.lm <- lm( travel ~ Rail - 1, data = Rail )
+fm2Rail.lm
+boxplot(fm2Rail.lm$residuals ~ Rail$Rail)
+```
+random-effects model
+$$\begin{aligned}
+y_{ij} &= \beta + b_i + \epsilon_{ij},\quad i=1,\dots,M,\quad j=1,\dots,n_i,\\
+b_i &\sim N(0,\sigma_b^2),\quad \epsilon_{ij}\sim N(0,\sigma^2)
+\end{aligned}$$
+```{r}
+fm1Rail.lme <- lme( travel ~ 1, data = Rail, random = ~ 1 | Rail )
+summary(fm1Rail.lme)
+```
+
+```{r}
+fm1Rail.lmeML <- update( fm1Rail.lme, method = "ML" )
+summary(fm1Rail.lmeML)
+```
+
+```{r}
+plot(fm1Rail.lme)
+intervals(fm1Rail.lme)
+anova(fm1Rail.lme)
+```
+
+###  A Randomized Block Design
+```{r}
+data("ergoStool")
+plot( ergoStool )
+plot.design(ergoStool)
+```
+fixed-effects model
+
+$$\begin{aligned}
+y_{ij} & = \beta_j + b_i + \epsilon_{ij},\quad i=1,\dots,M,\quad j=1,\dots,n_i,\\
+b_i &\sim N(0,\sigma_b^2),\quad \epsilon_{ij}\sim N(0,\sigma^2)
+\end{aligned}$$
+
+helmert contrasts
+```{r}
+options( contrasts = c( factor = "contr.helmert", ordered = "contr.poly" ) )
+contrasts( ergoStool$Type )
+fm1Stool <- lme(effort ~ Type, data = ergoStool, random =~1| Subject)
+summary( fm1Stool )
+anova( fm1Stool )
+```
+treatment contrasts
+```{r}
+options( contrasts = c( factor = "contr.treatment", ordered = "contr.poly" ) )
+contrasts( ergoStool$Type )
+fm2Stool <- lme(effort ~ Type, data = ergoStool, random =~1| Subject)
+summary( fm2Stool )
+anova( fm2Stool )
+```
+$$H_0:\quad \beta_2=\beta_3=\beta_4=0$$
+cell-mean model
+```{r}
+fm3Stool <- lme(effort ~ Type - 1, data = ergoStool, random = ~ 1 | Subject)
+summary( fm3Stool )
+anova( fm3Stool )
+```
+$$H_0:\quad \beta_1 = \beta_2=\beta_3=\beta_4=0$$
+
+- The overall effect of the factor should be assessed with anova, which does not depend on the choice of contrasts as long as the intercept term is retained in the model.
+- Interpretation of the parameter estimates for a fixed-effects term depends on the contrasts being used.
+- For REML estimation, likelihood-ratio tests or comparisons of AIC
+or BIC require the same fixed-effects structure and the same choice
+of contrasts in all models.
+
+```{r}
+intervals( fm1Stool )
+plot( fm1Stool, form = resid(., type = "p") ~ fitted(.) | Subject, abline = 0 )
+```
+
+### Mixed-Effects Models for Replicated, Blocked Designs
+```{r}
+data("Machines")
+plot( Machines )
+attach( Machines ) 
+interaction.plot( Machine, Worker, score, las = 1) 
+detach()
+```
+
+$$\begin{aligned}
+y_{ijk} & = \beta_j + b_i + b_{ij} + \epsilon_{ijk},\\
+b_i &\sim N(0,\sigma_b^2),\quad \epsilon_{ijk}\sim N(0,\sigma^2)
+\end{aligned}$$
+```{r}
+fm1Machine <- lme( score ~ Machine, data = Machines, random =~1| Worker )
+fm1Machine
+intervals( fm1Machine )
+```
+
+
+$$\begin{aligned}
+y_{ijk} & = \beta_j + b_i + \epsilon_{ijk},\\b_i &\sim N(0,\sigma_1^2),\quad b_{ij} \sim N(0,\sigma_2^2),\quad \epsilon_{ijk}\sim N(0,\sigma^2)
+\end{aligned}$$
+```{r}
+fm2Machine <- update( fm1Machine, random =~1| Worker/Machine )
+fm2Machine
+intervals( fm2Machine )
+```
+```{r}
+anova( fm1Machine, fm2Machine)
+```
+
+unbalanced data
+```{r}
+## delete selected rows from the Machines data
+MachinesUnbal <- Machines[ -c(2,3,6,8,9,12,19,20,27,33), ]
+## check that the result is indeed unbalanced
+table(MachinesUnbal$Machine, MachinesUnbal$Worker)
+fm1MachinesU <- lme( score ~ Machine, data = MachinesUnbal,
+                     random =~1| Worker/Machine )
+fm1MachinesU
+intervals( fm1MachinesU )
+```
+
+random interation effects
+$$\begin{aligned}
+y_{i} & = \mathbf{X}_i\mathbf{\beta} + \mathbf{Z}_i\mathbf{b}_i +  \mathbf{\epsilon}_{i},\\
+\mathbf{b}_i &\sim N(0,\Psi),\quad \mathbf{\epsilon}_{i}\sim N(0,\sigma^2\mathbf{I})
+\end{aligned}$$
+```{r}
+fm3Machine <- update( fm1Machine, random = ~Machine - 1 |Worker)
+summary( fm3Machine )
+```
+
+```{r}
+anova( fm1Machine, fm2Machine, fm3Machine )
+```
