@@ -158,3 +158,104 @@ summary( fm3Machine )
 ```{r}
 anova( fm1Machine, fm2Machine, fm3Machine )
 ```
+
+### An Analysis of Covariance Model
+$$\begin{aligned}
+y_{ij} & = \beta_1 + b_i + \beta_2x_{ij} + \epsilon_{ij},\\
+b_i &\sim N(0,\sigma_b^2),\quad \epsilon_{ij}\sim N(0,\sigma^2)
+\end{aligned}$$
+```{r}
+data("Orthodont")
+plot( Orthodont )
+names( Orthodont )
+levels( Orthodont$Sex )
+OrthoFem <- Orthodont[ Orthodont$Sex == "Female", ]
+```
+
+```{r}
+fm1OrthF.lis <- lmList( distance ~ age, data = OrthoFem )
+coef( fm1OrthF.lis )
+plot( intervals ( fm1OrthF.lis ) )
+```
+center the data
+```{r}
+fm2OrthF.lis <- update( fm1OrthF.lis, distance ~ I( age - 11 ) )
+plot( intervals( fm2OrthF.lis ) )
+```
+
+mixed-effects model
+```{r}
+fm1OrthF <- lme( distance ~ age, data = OrthoFem, random =~1| Subject )
+summary( fm1OrthF )
+```
+the REML criterion was created to compensate for the downward bias of the maximum
+likelihood estimates of variance components, so it should produce larger
+estimates.
+```{r}
+fm1OrthFM <- update( fm1OrthF, method = "ML" )
+summary( fm1OrthFM )
+```
+
+random effect for intercept and slope
+```{r}
+fm2OrthF <- update( fm1OrthF, random = ~ age | Subject )
+anova( fm1OrthF, fm2OrthF )
+```
+best linear unbiased predictions (BLUPs)
+```{r}
+random.effects( fm1OrthF )
+# ranef( fm1OrthF )
+coefficients( fm1OrthF )
+plot(compareFits(coef(fm1OrthF), coef(fm1OrthFM)))
+plot( augPred(fm1OrthF), aspect = "xy", grid = T )
+```
+
+### Models for Nested Classification Factors
+$$y_{ijk} = \beta_1 + \beta_2 d_{ik} + \beta_3 d^2_{ik} + b_{i,1} + b_{i,2}d_{ik} + b_{ij} + \epsilon_{ijk}$$
+```{r}
+data("Pixel")
+plot( Pixel )
+fm1Pixel <- lme( pixel ~ day + day^2, data = Pixel,
+                 random = list( Dog = ~ day, Side =~1))
+intervals( fm1Pixel )
+plot( augPred( fm1Pixel ) )
+VarCorr( fm1Pixel )
+summary( fm1Pixel )
+```
+```{r}
+fm2Pixel <- lme( pixel ~ day + day^2, data = Pixel,
+                 random =  ~ day | Dog )
+anova( fm1Pixel, fm2Pixel )
+fm3Pixel <- update( fm1Pixel, random =~1| Dog/Side )
+anova( fm1Pixel, fm3Pixel )
+fm4Pixel <- update( fm1Pixel, pixel ~ day + day^2 + Side )
+summary( fm4Pixel )
+```
+
+### A Split-Plot Experiment
+```{r}
+data("Oats")
+plot( Oats )
+fm1Oats <- lme( yield ~ ordered(nitro) * Variety, data = Oats,
+                random =~1| Block/Variety )
+anova( fm1Oats )
+```
+remove interaction
+```{r}
+fm2Oats <- update( fm1Oats, yield ~ ordered(nitro) + Variety )
+anova( fm2Oats )
+summary( fm2Oats )
+```
+remove fixed effect
+```{r}
+fm3Oats <- update( fm1Oats, yield ~ ordered( nitro ) )
+summary( fm3Oats )
+```
+remove nonlinear
+```{r}
+fm4Oats <- lme( yield ~ nitro, data = Oats, random = ~ 1 | Block/Variety )
+summary( fm4Oats )
+VarCorr( fm4Oats )
+plot( augPred( fm4Oats ), aspect = 2.5, layout = c(6, 3),
+      between = list( x = c(0, 0, 0.5) ) )
+```
