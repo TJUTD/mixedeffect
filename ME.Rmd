@@ -100,6 +100,13 @@ of contrasts in all models.
 intervals( fm1Stool )
 plot( fm1Stool, form = resid(., type = "p") ~ fitted(.) | Subject, abline = 0 )
 ```
+```{r}
+stoolLRTsim <-simulate.lme( 
+  list(fixed = effort ~ 1, data = ergoStool, random =~1| Subject),
+  list(fixed = effort ~ Type),
+  method = "ML", nsim = 1000, seed = 1 )
+plot( stoolLRTsim, df = c(3, 4) )
+```
 
 ### Mixed-Effects Models for Replicated, Blocked Designs
 ```{r}
@@ -158,6 +165,16 @@ summary( fm3Machine )
 ```{r}
 anova( fm1Machine, fm2Machine, fm3Machine )
 ```
+Simulating Likelihood Ratio Test Statistics
+
+generate data according to the null model using
+the parameter values from fm1Machine
+```{r}
+machineLRTsim <- simulate.lme(fm1Machine, fm2Machine, nsim= 1000, seed = 1 )
+plot( machineLRTsim, df = c(0, 1), layout = c(4,1), 
+      between = list(x = c(0, 0.5)) )
+```
+
 
 ### An Analysis of Covariance Model
 $$\begin{aligned}
@@ -208,6 +225,15 @@ random.effects( fm1OrthF )
 coefficients( fm1OrthF )
 plot(compareFits(coef(fm1OrthF), coef(fm1OrthFM)))
 plot( augPred(fm1OrthF), aspect = "xy", grid = T )
+```
+
+Simulating Likelihood Ratio Test Statistics
+
+generate data according to the null model using
+the parameter values from fm1OrthF
+```{r}
+orthLRTsim <- simulate.lme( fm1OrthF, fm2OrthF, nsim = 1000, seed = 1 )
+plot( orthLRTsim, df = c(1, 2) )
 ```
 
 ### Models for Nested Classification Factors
