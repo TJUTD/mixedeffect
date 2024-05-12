@@ -57,7 +57,7 @@ singl-mean model
 
 ![](ME_files/figure-markdown_github/unnamed-chunk-2-1.png) fixed-effects
 model
-*y*<sub>*i**j*</sub> = *β*<sub>*i*</sub> + *ϵ*<sub>*i**j*</sub>,  *i* = 1, …, *M*,  *j* = 1, …, *n*<sub>*i*</sub>.
+*y*<sub>*ij*</sub> = *β*<sub>*i*</sub> + *ϵ*<sub>*ij*</sub>,  *i* = 1, …, *M*,  *j* = 1, …, *n*<sub>*i*</sub>.
 
 ``` r
 > fm2Rail.lm <- lm( travel ~ Rail - 1, data = Rail )
@@ -857,7 +857,7 @@ from fm1OrthF
 
 ### Models for Nested Classification Factors
 
-*y*<sub>*i**j**k*</sub> = *β*<sub>1</sub> + *β*<sub>2</sub>*d*<sub>*i**k*</sub> + *β*<sub>3</sub>*d*<sub>*i**k*</sub><sup>2</sup> + *b*<sub>*i*, 1</sub> + *b*<sub>*i*, 2</sub>*d*<sub>*i**k*</sub> + *b*<sub>*i**j*</sub> + *ϵ*<sub>*i**j**k*</sub>
+*y*<sub>*ijk*</sub> = *β*<sub>1</sub> + *β*<sub>2</sub>*d*<sub>*ik*</sub> + *β*<sub>3</sub>*d*<sub>*ik*</sub><sup>2</sup> + *b*<sub>*i*, 1</sub> + *b*<sub>*i*, 2</sub>*d*<sub>*ik*</sub> + *b*<sub>*ij*</sub> + *ϵ*<sub>*ijk*</sub>
 
 ``` r
 > data("Pixel")
