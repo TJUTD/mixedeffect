@@ -1,6 +1,3 @@
-Mixed Effect
-================
-
 # Linear Mixed-Effects Models
 
 ### A Simple Example of Random Effects
@@ -11,7 +8,7 @@ Mixed Effect
 > plot( Rail )
 ```
 
-![](ME_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+![](ME_files/figure-markdown_github/unnamed-chunk-1-1.png)
 
 ``` r
 > Rail
@@ -39,7 +36,7 @@ Mixed Effect
     18    6     83
 
 singl-mean model
-$$y_{ij} = \beta + \epsilon_{ij},\quad i=1,\dots,M,\quad j=1,\dots,n_i.$$
+*y*<sub>*i**j*</sub> = *β* + *ϵ*<sub>*i**j*</sub>,  *i* = 1, …, *M*,  *j* = 1, …, *n*<sub>*i*</sub>.
 
 ``` r
 > fm1Rail.lm <- lm( travel ~ 1, data = Rail )
@@ -58,9 +55,9 @@ $$y_{ij} = \beta + \epsilon_{ij},\quad i=1,\dots,M,\quad j=1,\dots,n_i.$$
 > boxplot(fm1Rail.lm$residuals ~ Rail$Rail)
 ```
 
-![](ME_files/figure-gfm/unnamed-chunk-2-1.png)<!-- --> fixed-effects
+![](ME_files/figure-markdown_github/unnamed-chunk-2-1.png) fixed-effects
 model
-$$y_{ij} = \beta_i + \epsilon_{ij},\quad i=1,\dots,M,\quad j=1,\dots,n_i.$$
+*y*<sub>*i**j*</sub> = *β*<sub>*i*</sub> + *ϵ*<sub>*i**j*</sub>,  *i* = 1, …, *M*,  *j* = 1, …, *n*<sub>*i*</sub>.
 
 ``` r
 > fm2Rail.lm <- lm( travel ~ Rail - 1, data = Rail )
@@ -79,10 +76,11 @@ $$y_{ij} = \beta_i + \epsilon_{ij},\quad i=1,\dots,M,\quad j=1,\dots,n_i.$$
 > boxplot(fm2Rail.lm$residuals ~ Rail$Rail)
 ```
 
-![](ME_files/figure-gfm/unnamed-chunk-3-1.png)<!-- --> random-effects
-model $$\begin{aligned}
-y_{ij} &= \beta + b_i + \epsilon_{ij},\quad i=1,\dots,M,\quad j=1,\dots,n_i,\\
-b_i &\sim N(0,\sigma_b^2),\quad \epsilon_{ij}\sim N(0,\sigma^2)
+![](ME_files/figure-markdown_github/unnamed-chunk-3-1.png)
+random-effects model
+$$\begin{aligned}
+y\_{ij} &= \beta + b_i + \epsilon\_{ij},\quad i=1,\dots,M,\quad j=1,\dots,n_i,\\
+b_i &\sim N(0,\sigma_b^2),\quad \epsilon\_{ij}\sim N(0,\sigma^2)
 \end{aligned}$$
 
 ``` r
@@ -141,7 +139,7 @@ b_i &\sim N(0,\sigma_b^2),\quad \epsilon_{ij}\sim N(0,\sigma^2)
 > plot(fm1Rail.lme)
 ```
 
-![](ME_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](ME_files/figure-markdown_github/unnamed-chunk-6-1.png)
 
 ``` r
 > intervals(fm1Rail.lme)
@@ -176,18 +174,18 @@ b_i &\sim N(0,\sigma_b^2),\quad \epsilon_{ij}\sim N(0,\sigma^2)
 > plot( ergoStool )
 ```
 
-![](ME_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](ME_files/figure-markdown_github/unnamed-chunk-7-1.png)
 
 ``` r
 > plot.design(ergoStool)
 ```
 
-![](ME_files/figure-gfm/unnamed-chunk-7-2.png)<!-- --> fixed-effects
+![](ME_files/figure-markdown_github/unnamed-chunk-7-2.png) fixed-effects
 model
 
 $$\begin{aligned}
-y_{ij} & = \beta_j + b_i + \epsilon_{ij},\quad i=1,\dots,M,\quad j=1,\dots,n_i,\\
-b_i &\sim N(0,\sigma_b^2),\quad \epsilon_{ij}\sim N(0,\sigma^2)
+y\_{ij} & = \beta_j + b_i + \epsilon\_{ij},\quad i=1,\dots,M,\quad j=1,\dots,n_i,\\
+b_i &\sim N(0,\sigma_b^2),\quad \epsilon\_{ij}\sim N(0,\sigma^2)
 \end{aligned}$$
 
 helmert contrasts
@@ -300,7 +298,8 @@ treatment contrasts
     (Intercept)     1    24 455.0075  <.0001
     Type            3    24  22.3556  <.0001
 
-$$H_0:\quad \beta_2=\beta_3=\beta_4=0$$ cell-mean model
+*H*<sub>0</sub>:  *β*<sub>2</sub> = *β*<sub>3</sub> = *β*<sub>4</sub> = 0
+cell-mean model
 
 ``` r
 > fm3Stool <- lme(effort ~ Type - 1, data = ergoStool, random = ~ 1 | Subject)
@@ -343,16 +342,16 @@ $$H_0:\quad \beta_2=\beta_3=\beta_4=0$$ cell-mean model
          numDF denDF  F-value p-value
     Type     4    24 130.5186  <.0001
 
-$$H_0:\quad \beta_1 = \beta_2=\beta_3=\beta_4=0$$
+*H*<sub>0</sub>:  *β*<sub>1</sub> = *β*<sub>2</sub> = *β*<sub>3</sub> = *β*<sub>4</sub> = 0
 
-- The overall effect of the factor should be assessed with anova, which
-  does not depend on the choice of contrasts as long as the intercept
-  term is retained in the model.
-- Interpretation of the parameter estimates for a fixed-effects term
-  depends on the contrasts being used.
-- For REML estimation, likelihood-ratio tests or comparisons of AIC or
-  BIC require the same fixed-effects structure and the same choice of
-  contrasts in all models.
+-   The overall effect of the factor should be assessed with anova,
+    which does not depend on the choice of contrasts as long as the
+    intercept term is retained in the model.
+-   Interpretation of the parameter estimates for a fixed-effects term
+    depends on the contrasts being used.
+-   For REML estimation, likelihood-ratio tests or comparisons of AIC or
+    BIC require the same fixed-effects structure and the same choice of
+    contrasts in all models.
 
 ``` r
 > intervals( fm1Stool )
@@ -380,7 +379,7 @@ $$H_0:\quad \beta_1 = \beta_2=\beta_3=\beta_4=0$$
 > plot( fm1Stool, form = resid(., type = "p") ~ fitted(.) | Subject, abline = 0 )
 ```
 
-![](ME_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](ME_files/figure-markdown_github/unnamed-chunk-11-1.png)
 
 ``` r
 > stoolLRTsim <-simulate.lme( 
@@ -390,7 +389,7 @@ $$H_0:\quad \beta_1 = \beta_2=\beta_3=\beta_4=0$$
 > plot( stoolLRTsim, df = c(3, 4) )
 ```
 
-![](ME_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](ME_files/figure-markdown_github/unnamed-chunk-12-1.png)
 
 ### Mixed-Effects Models for Replicated, Blocked Designs
 
@@ -399,22 +398,22 @@ $$H_0:\quad \beta_1 = \beta_2=\beta_3=\beta_4=0$$
 > plot( Machines )
 ```
 
-![](ME_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](ME_files/figure-markdown_github/unnamed-chunk-13-1.png)
 
 ``` r
 > attach( Machines ) 
 > interaction.plot( Machine, Worker, score, las = 1) 
 ```
 
-![](ME_files/figure-gfm/unnamed-chunk-13-2.png)<!-- -->
+![](ME_files/figure-markdown_github/unnamed-chunk-13-2.png)
 
 ``` r
 > detach()
 ```
 
 $$\begin{aligned}
-y_{ijk} & = \beta_j + b_i + b_{ij} + \epsilon_{ijk},\\
-b_i &\sim N(0,\sigma_b^2),\quad \epsilon_{ijk}\sim N(0,\sigma^2)
+y\_{ijk} & = \beta_j + b_i + b\_{ij} + \epsilon\_{ijk},\\
+b_i &\sim N(0,\sigma_b^2),\quad \epsilon\_{ijk}\sim N(0,\sigma^2)
 \end{aligned}$$
 
 ``` r
@@ -459,7 +458,7 @@ b_i &\sim N(0,\sigma_b^2),\quad \epsilon_{ijk}\sim N(0,\sigma^2)
     2.577325 3.161647 3.878446 
 
 $$\begin{aligned}
-y_{ijk} & = \beta_j + b_i + \epsilon_{ijk},\\b_i &\sim N(0,\sigma_1^2),\quad b_{ij} \sim N(0,\sigma_2^2),\quad \epsilon_{ijk}\sim N(0,\sigma^2)
+y\_{ijk} & = \beta_j + b_i + \epsilon\_{ijk},\\b_i &\sim N(0,\sigma_1^2),\quad b\_{ij} \sim N(0,\sigma_2^2),\quad \epsilon\_{ijk}\sim N(0,\sigma^2)
 \end{aligned}$$
 
 ``` r
@@ -586,9 +585,10 @@ unbalanced data
         lower      est.     upper 
     0.7111280 0.9332027 1.2246279 
 
-random interation effects $$\begin{aligned}
-y_{i} & = \mathbf{X}_i\mathbf{\beta} + \mathbf{Z}_i\mathbf{b}_i +  \mathbf{\epsilon}_{i},\\
-\mathbf{b}_i &\sim N(0,\Psi),\quad \mathbf{\epsilon}_{i}\sim N(0,\sigma^2\mathbf{I})
+random interation effects
+$$\begin{aligned}
+y\_{i} & = \mathbf{X}\_i\mathbf{\beta} + \mathbf{Z}\_i\mathbf{b}\_i +  \mathbf{\epsilon}\_{i},\\
+\mathbf{b}\_i &\sim N(0,\Psi),\quad \mathbf{\epsilon}\_{i}\sim N(0,\sigma^2\mathbf{I})
 \end{aligned}$$
 
 ``` r
@@ -647,13 +647,13 @@ from fm1Machine
 +       between = list(x = c(0, 0.5)) )
 ```
 
-![](ME_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+![](ME_files/figure-markdown_github/unnamed-chunk-20-1.png)
 
 ### An Analysis of Covariance Model
 
 $$\begin{aligned}
-y_{ij} & = \beta_1 + b_i + \beta_2x_{ij} + \epsilon_{ij},\\
-b_i &\sim N(0,\sigma_b^2),\quad \epsilon_{ij}\sim N(0,\sigma^2)
+y\_{ij} & = \beta_1 + b_i + \beta_2x\_{ij} + \epsilon\_{ij},\\
+b_i &\sim N(0,\sigma_b^2),\quad \epsilon\_{ij}\sim N(0,\sigma^2)
 \end{aligned}$$
 
 ``` r
@@ -661,7 +661,7 @@ b_i &\sim N(0,\sigma_b^2),\quad \epsilon_{ij}\sim N(0,\sigma^2)
 > plot( Orthodont )
 ```
 
-![](ME_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
+![](ME_files/figure-markdown_github/unnamed-chunk-21-1.png)
 
 ``` r
 > names( Orthodont )
@@ -701,14 +701,15 @@ b_i &\sim N(0,\sigma_b^2),\quad \epsilon_{ij}\sim N(0,\sigma^2)
 > plot( intervals ( fm1OrthF.lis ) )
 ```
 
-![](ME_files/figure-gfm/unnamed-chunk-22-1.png)<!-- --> center the data
+![](ME_files/figure-markdown_github/unnamed-chunk-22-1.png) center the
+data
 
 ``` r
 > fm2OrthF.lis <- update( fm1OrthF.lis, distance ~ I( age - 11 ) )
 > plot( intervals( fm2OrthF.lis ) )
 ```
 
-![](ME_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
+![](ME_files/figure-markdown_github/unnamed-chunk-23-1.png)
 
 mixed-effects model
 
@@ -828,13 +829,13 @@ best linear unbiased predictions (BLUPs)
 > plot(compareFits(coef(fm1OrthF), coef(fm1OrthFM)))
 ```
 
-![](ME_files/figure-gfm/unnamed-chunk-27-1.png)<!-- -->
+![](ME_files/figure-markdown_github/unnamed-chunk-27-1.png)
 
 ``` r
 > plot( augPred(fm1OrthF), aspect = "xy", grid = T )
 ```
 
-![](ME_files/figure-gfm/unnamed-chunk-27-2.png)<!-- -->
+![](ME_files/figure-markdown_github/unnamed-chunk-27-2.png)
 
 Simulating Likelihood Ratio Test Statistics
 
@@ -845,26 +846,25 @@ from fm1OrthF
 > orthLRTsim <- simulate.lme( fm1OrthF, fm2OrthF, nsim = 1000, seed = 1 )
 ```
 
-    Warning in unlist(.C(mixed_combined, as.double(conLin$Xy),
-    as.integer(unlist(conLin$dims)), : Singular precision matrix in level -1, block
-    1
+    Warning in unlist(.C(mixed_combined, as.double(conLin$Xy), as.integer(unlist(conLin$dims)), : Singular precision
+    matrix in level -1, block 1
 
 ``` r
 > plot( orthLRTsim, df = c(1, 2) )
 ```
 
-![](ME_files/figure-gfm/unnamed-chunk-28-1.png)<!-- -->
+![](ME_files/figure-markdown_github/unnamed-chunk-28-1.png)
 
 ### Models for Nested Classification Factors
 
-$$y_{ijk} = \beta_1 + \beta_2 d_{ik} + \beta_3 d^2_{ik} + b_{i,1} + b_{i,2}d_{ik} + b_{ij} + \epsilon_{ijk}$$
+*y*<sub>*i**j**k*</sub> = *β*<sub>1</sub> + *β*<sub>2</sub>*d*<sub>*i**k*</sub> + *β*<sub>3</sub>*d*<sub>*i**k*</sub><sup>2</sup> + *b*<sub>*i*, 1</sub> + *b*<sub>*i*, 2</sub>*d*<sub>*i**k*</sub> + *b*<sub>*i**j*</sub> + *ϵ*<sub>*i**j**k*</sub>
 
 ``` r
 > data("Pixel")
 > plot( Pixel )
 ```
 
-![](ME_files/figure-gfm/unnamed-chunk-29-1.png)<!-- -->
+![](ME_files/figure-markdown_github/unnamed-chunk-29-1.png)
 
 ``` r
 > fm1Pixel <- lme( pixel ~ day + day^2, data = Pixel,
@@ -897,7 +897,7 @@ $$y_{ijk} = \beta_1 + \beta_2 d_{ik} + \beta_3 d^2_{ik} + b_{i,1} + b_{i,2}d_{ik
 > plot( augPred( fm1Pixel ) )
 ```
 
-![](ME_files/figure-gfm/unnamed-chunk-29-2.png)<!-- -->
+![](ME_files/figure-markdown_github/unnamed-chunk-29-2.png)
 
 ``` r
 > VarCorr( fm1Pixel )
@@ -1014,7 +1014,7 @@ $$y_{ijk} = \beta_1 + \beta_2 d_{ik} + \beta_3 d^2_{ik} + b_{i,1} + b_{i,2}d_{ik
 > plot( Oats )
 ```
 
-![](ME_files/figure-gfm/unnamed-chunk-31-1.png)<!-- -->
+![](ME_files/figure-markdown_github/unnamed-chunk-31-1.png)
 
 ``` r
 > fm1Oats <- lme( yield ~ ordered(nitro) * Variety, data = Oats,
@@ -1179,4 +1179,4 @@ remove nonlinear
 +       between = list( x = c(0, 0, 0.5) ) )
 ```
 
-![](ME_files/figure-gfm/unnamed-chunk-34-1.png)<!-- -->
+![](ME_files/figure-markdown_github/unnamed-chunk-34-1.png)
