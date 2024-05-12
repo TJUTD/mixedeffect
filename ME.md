@@ -36,7 +36,7 @@
     18    6     83
 
 singl-mean model
-*y*<sub>*i**j*</sub> = *β* + *ϵ*<sub>*i**j*</sub>,  *i* = 1, …, *M*,  *j* = 1, …, *n*<sub>*i*</sub>.
+*y*<sub>*ij*</sub> = *β* + *ϵ*<sub>*ij*</sub>,  *i* = 1, …, *M*,  *j* = 1, …, *n*<sub>*i*</sub>.
 
 ``` r
 > fm1Rail.lm <- lm( travel ~ 1, data = Rail )
